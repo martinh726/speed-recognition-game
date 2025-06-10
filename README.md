@@ -1,13 +1,13 @@
 # Speed Recognition Game
 
-A fullstack web game that helps improve your brain’s reaction time and accuracy by quickly classifying images, words, shapes, and colors. Built with Django (backend) and React (frontend).
+A fullstack web game that helps improve your brain’s reaction time and accuracy by quickly classifying images, words, and other categories. Built with Django (backend) and React (frontend).
 
 ---
 
 ## What This Project Does
 
 - Shows the player a quick visual or word challenge
-- The player must choose the correct category (like "Animal" or "Color")
+- The player must choose the correct category (like "Animal" or "Artist")
 - Tracks how fast and accurately the player responds
 - Stores player scores and game sessions in a database
 
