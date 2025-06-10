@@ -16,7 +16,7 @@ A fullstack web game that helps improve your brain’s reaction time and accurac
 ## Technologies Used
 
 - **Backend**: Django + Django REST Framework
-- **Frontend**: React (coming soon)
+- **Frontend**: React
 - **Database**: PostgreSQL
 - **Tools**: Git, GitHub, VS Code
 
