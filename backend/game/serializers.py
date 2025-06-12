@@ -5,7 +5,7 @@ from .models import PlayerProfile
 class ChallengeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Challenge
-        fields = ['prompt', 'correct_category']
+        fields = '__all__'
 
 class PlayerProfileSerializer(serializers.ModelSerializer):
     class Meta:
