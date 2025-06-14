@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [challenges, setChallenges] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0); 
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  // Fetch challenges on first load
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/challenges/")
       .then((res) => res.json())
@@ -15,6 +16,13 @@ function App() {
       });
   }, []);
 
+  // Restart game from beginning
+  const handleRestart = () => {
+    setScore(0);
+    setCurrentIndex(0);
+  };
+
+  // When player selects a category
   const handleAnswer = (selectedCategory) => {
     const currentChallenge = challenges[currentIndex];
     if (!currentChallenge) return;
@@ -66,7 +74,10 @@ function App() {
           <button onClick={() => handleAnswer("Shape")}>Shape</button>
         </div>
       ) : (
-        <p>No more challenges!</p>
+        <>
+          <p>No more challenges!</p>
+          <button onClick={handleRestart}>Restart Game</button>
+        </>
       )}
     </div>
   );
