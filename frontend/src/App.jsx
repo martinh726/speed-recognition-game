@@ -6,6 +6,7 @@ function App() {
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState("");
+  const [gameOver, setGameOver] = useState(false);
 
   // Fetch challenges on first load
   useEffect(() => {
@@ -21,6 +22,8 @@ function App() {
   const handleRestart = () => {
     setScore(0);
     setCurrentIndex(0);
+    setGameOver(false);
+    setFeedback("");
   };
 
   // When player selects a category
@@ -53,12 +56,12 @@ function App() {
 
         // Delay 1.5 seconds, then clear feedback and go to next
         setTimeout(() => {
-          setFeedback(""); // clear message
+          setFeedback("");
 
           if (currentIndex + 1 < challenges.length) {
             setCurrentIndex(currentIndex + 1);
           } else {
-            alert("🎉 All done! Your score: " + score);
+            setGameOver(true);
           }
         }, 1500);
       });
@@ -68,28 +71,29 @@ function App() {
     return <p>Loading...</p>;
   }
 
-  const current = challenges[currentIndex];
+  const current =
+    currentIndex < challenges.length ? challenges[currentIndex] : null;
 
   return (
     <div style={{ padding: "2rem" }}>
       <h1>🧠 Speed Recognition Game</h1>
       <p>Score: {score}</p>
 
-      {current ? (
+      {!gameOver && current ? (
         <div>
+          {feedback && <p style={{ fontWeight: "bold" }}>{feedback}</p>}
           <p>
             <strong>{current.prompt}</strong> — {current.type}
           </p>
           <button onClick={() => handleAnswer("Animal")}>Animal</button>
           <button onClick={() => handleAnswer("Object")}>Object</button>
           <button onClick={() => handleAnswer("Shape")}>Shape</button>
-          {feedback && <p style={{ fontWeight: "bold" }}>{feedback}</p>}
         </div>
       ) : (
-        <>
+        <div>
           <p>No more challenges!</p>
           <button onClick={handleRestart}>Restart Game</button>
-        </>
+        </div>
       )}
     </div>
   );
