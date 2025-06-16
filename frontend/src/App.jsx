@@ -5,6 +5,7 @@ function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [feedback, setFeedback] = useState("");
 
   // Fetch challenges on first load
   useEffect(() => {
@@ -43,13 +44,23 @@ function App() {
 
         if (data.correct) {
           setScore(score + 1);
+          setFeedback("✅ Correct!");
+        } else {
+          setFeedback(
+            `❌ Oops! The correct answer was: ${data.correct_category}`
+          );
         }
 
-        if (currentIndex + 1 < challenges.length) {
-          setCurrentIndex(currentIndex + 1);
-        } else {
-          alert("🎉 All done! Your score: " + score);
-        }
+        // Delay 1.5 seconds, then clear feedback and go to next
+        setTimeout(() => {
+          setFeedback(""); // clear message
+
+          if (currentIndex + 1 < challenges.length) {
+            setCurrentIndex(currentIndex + 1);
+          } else {
+            alert("🎉 All done! Your score: " + score);
+          }
+        }, 1500);
       });
   };
 
@@ -72,6 +83,7 @@ function App() {
           <button onClick={() => handleAnswer("Animal")}>Animal</button>
           <button onClick={() => handleAnswer("Object")}>Object</button>
           <button onClick={() => handleAnswer("Shape")}>Shape</button>
+          {feedback && <p style={{ fontWeight: "bold" }}>{feedback}</p>}
         </div>
       ) : (
         <>
