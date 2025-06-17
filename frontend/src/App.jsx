@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import Leaderboard from "./components/Leaderboard";
+import ChallengeCard from "./components/ChallengeCard";
 
 function App() {
   const [challenges, setChallenges] = useState([]);
@@ -91,47 +93,19 @@ function App() {
       <p>Score: {score}</p>
 
       {!gameOver && current ? (
-        <div>
-          {feedback && <p style={{ fontWeight: "bold" }}>{feedback}</p>}
-          <p>
-            <strong>{current.prompt}</strong> — {current.type}
-          </p>
-          <button onClick={() => handleAnswer("Animal")}>Animal</button>
-          <button onClick={() => handleAnswer("Object")}>Object</button>
-          <button onClick={() => handleAnswer("Shape")}>Shape</button>
-        </div>
+        <ChallengeCard
+          challenge={current}
+          feedback={feedback}
+          onAnswer={handleAnswer}
+        />
       ) : (
         <div>
           <p>No more challenges!</p>
           <button onClick={handleRestart}>Restart Game</button>
-
           <button onClick={() => setShowLeaderboard(!showLeaderboard)}>
             {showLeaderboard ? "Hide Leaderboard" : "Show Leaderboard"}
           </button>
-
-          {showLeaderboard && (
-            <div>
-              <h2>🏆 Leaderboard</h2>
-              <table border="1" cellPadding="10">
-                <thead>
-                  <tr>
-                    <th>Player</th>
-                    <th>High Score</th>
-                    <th>Avg Reaction Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {players.map((player) => (
-                    <tr key={player.user}>
-                      <td>{player.user}</td>
-                      <td>{player.high_score}</td>
-                      <td>{player.average_reaction_time.toFixed(2)}s</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+          {showLeaderboard && <Leaderboard players={players} />}
         </div>
       )}
     </div>
