@@ -7,6 +7,8 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState("");
   const [gameOver, setGameOver] = useState(false);
+  const [players, setPlayers] = useState([]); // ✅ fixed name
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   // Fetch challenges on first load
   useEffect(() => {
@@ -15,6 +17,15 @@ function App() {
       .then((data) => {
         setChallenges(data);
         setLoading(false);
+      });
+  }, []);
+
+  // Fetch player leaderboard data
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/player-profile/")
+      .then((res) => res.json())
+      .then((data) => {
+        setPlayers(data);
       });
   }, []);
 
@@ -54,7 +65,7 @@ function App() {
           );
         }
 
-        // Delay 1.5 seconds, then clear feedback and go to next
+        // Delay 1.1 seconds, then go to next or end
         setTimeout(() => {
           setFeedback("");
 
@@ -63,7 +74,7 @@ function App() {
           } else {
             setGameOver(true);
           }
-        }, 1500);
+        }, 1100);
       });
   };
 
@@ -93,6 +104,34 @@ function App() {
         <div>
           <p>No more challenges!</p>
           <button onClick={handleRestart}>Restart Game</button>
+
+          <button onClick={() => setShowLeaderboard(!showLeaderboard)}>
+            {showLeaderboard ? "Hide Leaderboard" : "Show Leaderboard"}
+          </button>
+
+          {showLeaderboard && (
+            <div>
+              <h2>🏆 Leaderboard</h2>
+              <table border="1" cellPadding="10">
+                <thead>
+                  <tr>
+                    <th>Player</th>
+                    <th>High Score</th>
+                    <th>Avg Reaction Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {players.map((player) => (
+                    <tr key={player.user}>
+                      <td>{player.user}</td>
+                      <td>{player.high_score}</td>
+                      <td>{player.average_reaction_time.toFixed(2)}s</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
     </div>
