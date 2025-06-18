@@ -20,6 +20,7 @@ Thumbs.db
 *.pyc
 staticfiles/
 local_settings.py
+.env
 
 # React
 node_modules/
