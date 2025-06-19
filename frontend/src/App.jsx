@@ -9,7 +9,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState("");
   const [gameOver, setGameOver] = useState(false);
-  const [players, setPlayers] = useState([]); // ✅ fixed name
+  const [players, setPlayers] = useState([]); 
   const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   // Fetch challenges on first load

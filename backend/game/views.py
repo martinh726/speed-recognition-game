@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 from .models import Challenge, GameSession, PlayerProfile
 from django.contrib.auth.models import User
 from .serializers import ChallengeSerializer
@@ -38,7 +39,7 @@ def submit_answer(request):
     import random
     fake_reaction_time = round(random.uniform(0.5, 2.0), 2)
 
-    # Saveing the game session
+    # Saving the game session
     GameSession.objects.create(
         player=player_profile,
         challenge=challenge,
@@ -53,3 +54,14 @@ def submit_answer(request):
         'prompt': challenge.prompt,
         'reaction_time': fake_reaction_time
     })
+
+@api_view(['POST'])
+def register_user(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Username already taken'}, status=400)
+
+    user = User.objects.create_user(username=username, password=password)
+    return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
