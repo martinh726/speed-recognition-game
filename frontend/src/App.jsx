@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Leaderboard from "./components/Leaderboard";
 import ChallengeCard from "./components/ChallengeCard";
+import LoginForm from "./components/LoginForm";
 
 function App() {
   const [challenges, setChallenges] = useState([]);
@@ -9,8 +10,15 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState("");
   const [gameOver, setGameOver] = useState(false);
-  const [players, setPlayers] = useState([]); 
+  const [players, setPlayers] = useState([]);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(
+    !!localStorage.getItem("accessToken")
+  );
+
+  if (!loggedIn) {
+    return <LoginForm onLogin={() => setLoggedIn(true)} />;
+  }
 
   // Fetch challenges on first load
   useEffect(() => {
