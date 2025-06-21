@@ -16,11 +16,7 @@ function App() {
     !!localStorage.getItem("accessToken")
   );
 
-  if (!loggedIn) {
-    return <LoginForm onLogin={() => setLoggedIn(true)} />;
-  }
-
-  // Fetch challenges on first load
+     // Fetch challenges from the API
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/challenges/")
       .then((res) => res.json())
@@ -28,7 +24,7 @@ function App() {
         setChallenges(data);
         setLoading(false);
       });
-  }, []);
+  }, [loggedIn]);
 
   // Fetch player leaderboard data
   useEffect(() => {
@@ -87,6 +83,10 @@ function App() {
         }, 1100);
       });
   };
+
+  if (!loggedIn) {
+    return <LoginForm onLogin={() => setLoggedIn(true)} />;
+  }
 
   if (loading) {
     return <p>Loading...</p>;
