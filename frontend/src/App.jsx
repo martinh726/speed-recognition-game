@@ -15,8 +15,9 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(
     !!localStorage.getItem("accessToken")
   );
+  const [username, setUsername] = useState("");
 
-     // Fetch challenges from the API
+  // Fetch challenges from the API
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/challenges/")
       .then((res) => res.json())
@@ -24,6 +25,25 @@ function App() {
         setChallenges(data);
         setLoading(false);
       });
+  }, [loggedIn]); // runs useEffect /fetch challenges if loggedIn state changes
+
+  // Fetch username from the API
+  const fetchUsername = () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return;
+    fetch("http://127.0.0.1:8000/api/current-user/", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setUsername(data.username));
+  };
+
+  useEffect(() => {
+    if (loggedIn) {
+      fetchUsername();
+    }
   }, [loggedIn]);
 
   // Fetch player leaderboard data
@@ -98,6 +118,7 @@ function App() {
   return (
     <div style={{ padding: "2rem" }}>
       <h1>🧠 Speed Recognition Game</h1>
+      {username && <h2>Welcome, {username}!</h2>}
       <p>Score: {score}</p>
 
       {!gameOver && current ? (
