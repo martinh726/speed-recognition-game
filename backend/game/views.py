@@ -1,6 +1,8 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 from .models import Challenge, GameSession, PlayerProfile
 from django.contrib.auth.models import User
 from .serializers import ChallengeSerializer
@@ -65,3 +67,17 @@ def register_user(request):
 
     user = User.objects.create_user(username=username, password=password)
     return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_logged_in_user(request):
+    profile = PlayerProfile.objects.get(user=request.user)
+
+    return Response({
+        "username": profile.user.username,
+        "high_score": profile.high_score,
+        "total_games_played": profile.total_games_played
+    })
