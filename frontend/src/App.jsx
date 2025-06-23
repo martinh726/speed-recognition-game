@@ -103,6 +103,15 @@ function App() {
         }, 1100);
       });
   };
+  // Logout to clear token and reset state
+  const handleLogout = () => {
+  localStorage.removeItem("accessToken"); 
+  setLoggedIn(false);                    
+  setUsername("");                       
+  setScore(0);                          
+  setCurrentIndex(0);                    
+};
+
 
   if (!loggedIn) {
     return <LoginForm onLogin={() => setLoggedIn(true)} />;
@@ -120,6 +129,7 @@ function App() {
       <h1>🧠 Speed Recognition Game</h1>
       {username && <h2>Welcome, {username}!</h2>}
       <p>Score: {score}</p>
+      
 
       {!gameOver && current ? (
         <ChallengeCard
@@ -131,6 +141,7 @@ function App() {
         <div>
           <p>No more challenges!</p>
           <button onClick={handleRestart}>Restart Game</button>
+          <button onClick={handleLogout}>Logout</button>
           <button onClick={() => setShowLeaderboard(!showLeaderboard)}>
             {showLeaderboard ? "Hide Leaderboard" : "Show Leaderboard"}
           </button>
