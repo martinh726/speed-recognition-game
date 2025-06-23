@@ -33,7 +33,7 @@ function App() {
     if (!token) return;
     fetch("http://127.0.0.1:8000/api/current-user/", {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
@@ -105,13 +105,12 @@ function App() {
   };
   // Logout to clear token and reset state
   const handleLogout = () => {
-  localStorage.removeItem("accessToken"); 
-  setLoggedIn(false);                    
-  setUsername("");                       
-  setScore(0);                          
-  setCurrentIndex(0);                    
-};
-
+    localStorage.removeItem("accessToken");
+    setLoggedIn(false);
+    setUsername("");
+    setScore(0);
+    setCurrentIndex(0);
+  };
 
   if (!loggedIn) {
     return <LoginForm onLogin={() => setLoggedIn(true)} />;
@@ -127,9 +126,8 @@ function App() {
   return (
     <div style={{ padding: "2rem" }}>
       <h1>🧠 Speed Recognition Game</h1>
-      {username && <h2>Welcome, {username}!</h2>}
+      {username && <p>Welcome, {username}!</p>}
       <p>Score: {score}</p>
-      
 
       {!gameOver && current ? (
         <ChallengeCard
