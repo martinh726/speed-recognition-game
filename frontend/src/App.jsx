@@ -37,7 +37,7 @@ function App() {
       },
     })
       .then((res) => res.json())
-      .then((data) => setUsername(data.username));
+      .then((data) => {setUsername(data.username)});
   };
 
   useEffect(() => {
