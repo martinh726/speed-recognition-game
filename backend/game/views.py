@@ -68,13 +68,10 @@ def register_user(request):
     user = User.objects.create_user(username=username, password=password)
     return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
 
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_logged_in_user(request):
-    profile = PlayerProfile.objects.get(user=request.user)
+    profile, created = PlayerProfile.objects.get_or_create(user=request.user)
 
     return Response({
         "username": profile.user.username,
