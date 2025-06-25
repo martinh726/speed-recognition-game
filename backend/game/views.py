@@ -78,3 +78,21 @@ def get_logged_in_user(request):
         "high_score": profile.high_score,
         "total_games_played": profile.total_games_played
     })
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_player_stats(request):
+    profile = PlayerProfile.objects.get(user=request.user)
+    data = request.data
+
+    final_score = data.get("score", 0)
+
+    # Update high score if needed
+    if final_score > profile.high_score:
+        profile.high_score = final_score
+
+    # Update total games played
+    profile.total_games_played += 1
+    profile.save()
+
+    return Response({"message": "Stats updated"})        
