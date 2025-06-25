@@ -37,7 +37,9 @@ function App() {
       },
     })
       .then((res) => res.json())
-      .then((data) => {setUsername(data.username)});
+      .then((data) => {
+        setUsername(data.username);
+      });
   };
 
   useEffect(() => {
@@ -99,6 +101,18 @@ function App() {
             setCurrentIndex(currentIndex + 1);
           } else {
             setGameOver(true);
+
+            // Update backend with final score
+            fetch("http://127.0.0.1:8000/api/update-stats/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+              body: JSON.stringify({ score }),
+            })
+              .then((res) => res.json())
+              .then((data) => console.log("Stats updated:", data));
           }
         }, 1100);
       });
