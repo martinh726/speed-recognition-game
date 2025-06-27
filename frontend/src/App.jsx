@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Leaderboard from "./components/Leaderboard";
 import ChallengeCard from "./components/ChallengeCard";
 import LoginForm from "./components/LoginForm";
+import GameHistory from "./components/GameHistory";
 
 function App() {
   const [challenges, setChallenges] = useState([]);
@@ -16,6 +17,7 @@ function App() {
     !!localStorage.getItem("accessToken")
   );
   const [username, setUsername] = useState("");
+  const token = localStorage.getItem("accessToken");
 
   // Fetch challenges from the API
   useEffect(() => {
@@ -50,13 +52,14 @@ function App() {
 
   // Fetch player leaderboard data
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/player-profile/")
-      .then((res) => res.json())
-      .then((data) => {
-        setPlayers(data);
-      });
-  }, []);
-
+    if (loggedIn) {
+      fetch("http://127.0.0.1:8000/api/player-profile/")
+        .then((res) => res.json())
+        .then((data) => {
+          setPlayers(data);
+        });
+    }
+  }, [loggedIn]);
   // Restart game from beginning
   const handleRestart = () => {
     setScore(0);
@@ -158,6 +161,9 @@ function App() {
             {showLeaderboard ? "Hide Leaderboard" : "Show Leaderboard"}
           </button>
           {showLeaderboard && <Leaderboard players={players} />}
+          {showLeaderboard && (
+            <GameHistory token={token} />
+          )}
         </div>
       )}
     </div>
