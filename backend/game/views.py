@@ -7,6 +7,7 @@ from .models import Challenge, GameSession, PlayerProfile
 from django.contrib.auth.models import User
 from .serializers import ChallengeSerializer
 from .serializers import PlayerProfileSerializer
+from .serializers import GameSessionSerializer
 
 @api_view(['GET'])
 def get_challenges(request):
@@ -101,3 +102,11 @@ def update_stats(request):
         "high_score": profile.high_score,
         "total_games_played": profile.total_games_played
     })
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def game_history(request):
+    player_profile = PlayerProfile.objects.get(user=request.user)
+    sessions = GameSession.objects.filter(player=player_profile).order_by('created_at')
+    serializer = GameSessionSerializer(sessions, many=True)
+    return Response(serializer.data)
