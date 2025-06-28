@@ -107,6 +107,6 @@ def update_stats(request):
 @permission_classes([IsAuthenticated])
 def game_history(request):
     player_profile = PlayerProfile.objects.get(user=request.user)
-    sessions = GameSession.objects.filter(player=player_profile).order_by('created_at')
+    sessions = GameSession.objects.filter(player=player_profile).order_by('-timestamp')[:10]  # Get the last 10 sessions
     serializer = GameSessionSerializer(sessions, many=True)
     return Response(serializer.data)

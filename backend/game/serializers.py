@@ -15,5 +15,5 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
 
 class GameSessionSerializer(serializers.Serializer):
     class Meta:
-        model = 'GameSession'
+        model = GameSession
         fields = ('player', 'challenge', 'chosen_category', 'correct', 'reaction_time', 'created_at')
