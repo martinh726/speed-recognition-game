@@ -13,7 +13,7 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
         model = PlayerProfile
         fields = '__all__'
 
-class GameSessionSerializer(serializers.Serializer):
+class GameSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = GameSession
-        fields = ('player', 'challenge', 'chosen_category', 'correct', 'reaction_time', 'created_at')
+        fields = ('id', 'player', 'challenge', 'chosen_category', 'correct', 'reaction_time', 'timestamp')
