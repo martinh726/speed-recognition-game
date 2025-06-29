@@ -8,7 +8,9 @@ function GameHistory({ token }) {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
-      .then((data) => setHistory(data))
+      .then((data) =>{ 
+      console.log(data)  // Log the data to check its structure  
+      setHistory(data)})
       .catch(console.error);
   }, [token]);
 
@@ -21,7 +23,7 @@ function GameHistory({ token }) {
             Game #{session.id}:{" "}
             {session.correct ? "✅ Correct" : "❌ Incorrect"} —
             {session.reaction_time}s at{" "}
-            {new Date(session.created_at).toLocaleString()}
+            {new Date(session.timestamp).toLocaleString()}
           </li>
         ))}
       </ul>
