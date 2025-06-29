@@ -80,7 +80,10 @@ function App() {
 
     fetch("http://127.0.0.1:8000/api/submit/", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
       body: JSON.stringify(payload),
     })
       .then((res) => res.json())
@@ -161,9 +164,7 @@ function App() {
             {showLeaderboard ? "Hide Leaderboard" : "Show Leaderboard"}
           </button>
           {showLeaderboard && <Leaderboard players={players} />}
-          {showLeaderboard && (
-            <GameHistory token={token} />
-          )}
+          {showLeaderboard && <GameHistory token={token} />}
         </div>
       )}
     </div>
