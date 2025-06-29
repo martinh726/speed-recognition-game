@@ -22,6 +22,7 @@ def get_player_profile(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def submit_answer(request):
     data = request.data
     challenge_id = data.get('challenge_id')
