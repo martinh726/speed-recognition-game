@@ -12,10 +12,10 @@ function Leaderboard({ players }) {
         </thead>
         <tbody>
           {players.map((player) => (
-            <tr key={player.user}>
+            <tr key={player.id}>
               <td>{player.user}</td>
               <td>{player.high_score}</td>
-              <td>{player.average_reaction_time.toFixed(2)}s</td>
+              <td>{player.avg_reaction_time}s</td>
             </tr>
           ))}
         </tbody>
@@ -23,5 +23,4 @@ function Leaderboard({ players }) {
     </div>
   );
 }
-
 export default Leaderboard;
