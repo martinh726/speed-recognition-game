@@ -88,8 +88,6 @@ function App() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Submitted:", data);
-
         if (data.correct) {
           setScore(score + 1);
           setFeedback("✅ Correct!");
