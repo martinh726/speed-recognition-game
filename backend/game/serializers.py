@@ -21,7 +21,16 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             return 0.0
         total_time = sum([s.reaction_time for s in sessions])
         return round(total_time / sessions.count(), 2)
+    
 class GameSessionSerializer(serializers.ModelSerializer):
+    challenge = serializers.SerializerMethodField()
+
     class Meta:
         model = GameSession
-        fields = ('id', 'player', 'challenge', 'chosen_category', 'correct', 'reaction_time', 'timestamp')
+        fields = ('id', 'chosen_category', 'correct', 'reaction_time', 'timestamp', 'challenge')
+
+    def get_challenge(self, obj):
+        return {
+            "prompt": obj.challenge.prompt,
+            "type": obj.challenge.type,
+        }
