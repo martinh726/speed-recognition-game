@@ -35,11 +35,9 @@ def submit_answer(request):
 
     is_correct = (selected_category.lower() == challenge.correct_category.lower())
 
-    # for now just using first user for testing
     user = request.user if request.user.is_authenticated else User.objects.first()
     player_profile, created = PlayerProfile.objects.get_or_create(user=user)
 
-    # fake reaction time for now will replace later
     import random
     fake_reaction_time = round(random.uniform(0.5, 2.0), 2)
 
