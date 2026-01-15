@@ -29,28 +29,41 @@ function App() {
   const [streak, setStreak] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [gameTimer, setGameTimer] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(false);
 
   const token = localStorage.getItem("accessToken");
 
   // Fetch user profile
   const fetchUserProfile = () => {
     if (!token) return;
+    setProfileLoading(true);
     fetch("http://127.0.0.1:8000/api/current-user/", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         setUserProfile(data);
+        setProfileLoading(false);
       })
-      .catch((err) => console.error("Error fetching profile:", err));
+      .catch((err) => {
+        console.error("Error fetching profile:", err);
+        setProfileLoading(false);
+      });
   };
 
   // Fetch challenges from the API
   const fetchChallenges = () => {
     setLoading(true);
-    fetch(`http://127.0.0.1:8000/api/challenges/?difficulty=${difficulty}&limit=20`)
+    fetch(
+      `http://127.0.0.1:8000/api/challenges/?difficulty=${difficulty}&limit=20`
+    )
       .then((res) => res.json())
       .then((data) => {
         setChallenges(data);
@@ -191,7 +204,16 @@ function App() {
     return <LoginForm onLogin={() => setLoggedIn(true)} />;
   }
 
-  if (loading && !gameStarted) {
+  if (profileLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading your profile...</p>
+      </div>
+    );
+  }
+
+  if (loading && gameStarted) {
     return (
       <div className="loading-container">
         <div className="loading-spinner"></div>
@@ -200,7 +222,8 @@ function App() {
     );
   }
 
-  const current = currentIndex < challenges.length ? challenges[currentIndex] : null;
+  const current =
+    currentIndex < challenges.length ? challenges[currentIndex] : null;
 
   return (
     <div className="app">
@@ -218,22 +241,22 @@ function App() {
             </div>
           )}
         </div>
-        
+
         <nav className="game-nav">
-          <button 
-            className={`nav-btn ${showProfile ? 'active' : ''}`}
+          <button
+            className={`nav-btn ${showProfile ? "active" : ""}`}
             onClick={() => setShowProfile(!showProfile)}
           >
             👤 Profile
           </button>
-          <button 
-            className={`nav-btn ${showStats ? 'active' : ''}`}
+          <button
+            className={`nav-btn ${showStats ? "active" : ""}`}
             onClick={() => setShowStats(!showStats)}
           >
             📊 Stats
           </button>
-          <button 
-            className={`nav-btn ${showLeaderboard ? 'active' : ''}`}
+          <button
+            className={`nav-btn ${showLeaderboard ? "active" : ""}`}
             onClick={() => setShowLeaderboard(!showLeaderboard)}
           >
             🏆 Leaderboard
@@ -250,7 +273,7 @@ function App() {
         {showLeaderboard && <Leaderboard players={players} />}
 
         {!gameStarted && !showProfile && !showStats && !showLeaderboard && (
-          <GameMenu 
+          <GameMenu
             onStartGame={startGameRound}
             difficulty={difficulty}
             onDifficultyChange={setDifficulty}
@@ -271,7 +294,9 @@ function App() {
               </div>
               <div className="stat-item">
                 <span className="stat-label">Progress</span>
-                <span className="stat-value">{currentIndex + 1}/{challenges.length}</span>
+                <span className="stat-value">
+                  {currentIndex + 1}/{challenges.length}
+                </span>
               </div>
             </div>
 
@@ -300,7 +325,10 @@ function App() {
                 <div className="final-stat">
                   <span className="final-stat-label">Accuracy</span>
                   <span className="final-stat-value">
-                    {challenges.length > 0 ? Math.round((score / challenges.length) * 100) : 0}%
+                    {challenges.length > 0
+                      ? Math.round((score / challenges.length) * 100)
+                      : 0}
+                    %
                   </span>
                 </div>
               </div>
@@ -308,7 +336,10 @@ function App() {
                 <button className="btn btn-primary" onClick={handleRestart}>
                   🔄 Play Again
                 </button>
-                <button className="btn btn-secondary" onClick={() => setGameStarted(false)}>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setGameStarted(false)}
+                >
                   🏠 Main Menu
                 </button>
               </div>

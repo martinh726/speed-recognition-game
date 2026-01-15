@@ -39,7 +39,6 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
             return 0.0
         total_time = sum([s.reaction_time for s in sessions])
         return round(total_time / sessions.count(), 2)
-    
 class GameSessionSerializer(serializers.ModelSerializer):
     challenge = serializers.SerializerMethodField()
 
