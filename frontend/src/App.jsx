@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import Navbar from "./components/Navbar";
 import Leaderboard from "./components/Leaderboard";
 import ChallengeCard from "./components/ChallengeCard";
 import LoginForm from "./components/LoginForm";
@@ -227,45 +228,13 @@ function App() {
 
   return (
     <div className="app">
-      <header className="app-header">
-        <div className="header-content">
-          <h1 className="game-title">
-            <span className="brain-emoji">🧠</span>
-            Speed Recognition Game
-          </h1>
-          {userProfile && (
-            <div className="user-info">
-              <span className="user-avatar">{userProfile.avatar}</span>
-              <span className="username">Welcome, {userProfile.username}!</span>
-              <span className="user-level">Level {userProfile.level}</span>
-            </div>
-          )}
-        </div>
-
-        <nav className="game-nav">
-          <button
-            className={`nav-btn ${showProfile ? "active" : ""}`}
-            onClick={() => setShowProfile(!showProfile)}
-          >
-            👤 Profile
-          </button>
-          <button
-            className={`nav-btn ${showStats ? "active" : ""}`}
-            onClick={() => setShowStats(!showStats)}
-          >
-            📊 Stats
-          </button>
-          <button
-            className={`nav-btn ${showLeaderboard ? "active" : ""}`}
-            onClick={() => setShowLeaderboard(!showLeaderboard)}
-          >
-            🏆 Leaderboard
-          </button>
-          <button className="nav-btn logout-btn" onClick={handleLogout}>
-            🚪 Logout
-          </button>
-        </nav>
-      </header>
+      <Navbar
+        userProfile={userProfile}
+        onProfileClick={() => setShowProfile(!showProfile)}
+        onStatsClick={() => setShowStats(!showStats)}
+        onLeaderboardClick={() => setShowLeaderboard(!showLeaderboard)}
+        onLogout={handleLogout}
+      />
 
       <main className="game-main">
         {showProfile && <PlayerProfile profile={userProfile} />}
