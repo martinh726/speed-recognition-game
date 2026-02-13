@@ -1,11 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
-function LoginForm({ onLogin }) {
+function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
+  const { login, register } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,56 +18,13 @@ function LoginForm({ onLogin }) {
 
     try {
       if (isLogin) {
-        // Login
-        const response = await fetch("http://127.0.0.1:8000/api/token/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username, password }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem("accessToken", data.access);
-          onLogin();
-        } else {
-          setError("Invalid username or password");
-        }
+        await login(username, password);
       } else {
-        // Register
-        const response = await fetch("http://127.0.0.1:8000/api/register/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username, password }),
-        });
-
-        if (response.ok) {
-          setError("");
-          setIsLogin(true);
-          // Auto-login after registration
-          const loginResponse = await fetch("http://127.0.0.1:8000/api/token/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, password }),
-          });
-
-          if (loginResponse.ok) {
-            const data = await loginResponse.json();
-            localStorage.setItem("accessToken", data.access);
-            onLogin();
-          }
-        } else {
-          const errorData = await response.json();
-          setError(errorData.error || "Registration failed");
-        }
+        await register(username, password);
       }
+      navigate("/");
     } catch (err) {
-      setError("Network error. Please try again.");
+      setError(err.message || "Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -86,14 +47,14 @@ function LoginForm({ onLogin }) {
           <div className="form-tabs">
             <button
               type="button"
-              className={`tab-btn ${isLogin ? 'active' : ''}`}
+              className={`tab-btn ${isLogin ? "active" : ""}`}
               onClick={() => setIsLogin(true)}
             >
               Login
             </button>
             <button
               type="button"
-              className={`tab-btn ${!isLogin ? 'active' : ''}`}
+              className={`tab-btn ${!isLogin ? "active" : ""}`}
               onClick={() => setIsLogin(false)}
             >
               Register
@@ -131,22 +92,18 @@ function LoginForm({ onLogin }) {
             />
           </div>
 
-          <button 
-            type="submit" 
-            className="submit-btn"
-            disabled={loading}
-          >
+          <button type="submit" className="submit-btn" disabled={loading}>
             {loading ? (
               <>
                 <span className="loading-spinner-small"></span>
-                {isLogin ? 'Logging in...' : 'Creating account...'}
+                {isLogin ? "Logging in..." : "Creating account..."}
               </>
             ) : (
               <>
                 <span className="btn-icon">
-                  {isLogin ? '🚀' : '✨'}
+                  {isLogin ? "🚀" : "✨"}
                 </span>
-                {isLogin ? 'Login' : 'Create Account'}
+                {isLogin ? "Login" : "Create Account"}
               </>
             )}
           </button>
