@@ -1,32 +1,77 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../api";
 
-function GameHistory({ token }) {
+function GameHistory() {
   const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/game-history/", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    apiFetch("/game-history/")
       .then((res) => res.json())
-      .then((data) =>{ 
-      console.log(data)  // Log the data to check its structure  
-      setHistory(data)})
-      .catch(console.error);
-  }, [token]);
+      .then((data) => {
+        setHistory(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching game history:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Loading history...</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h2>Your Game History</h2>
-      <ul>
-        {history.map((session) => (
-          <li key={session.id}>
-            Game #{session.id}:{" "}
-            {session.correct ? "✅ Correct" : "❌ Incorrect"} —
-            {session.reaction_time}s at{" "}
-            {new Date(session.timestamp).toLocaleString()}
-          </li>
-        ))}
-      </ul>
+    <div className="game-stats">
+      <div className="stats-container">
+        <h2>📜 Game History</h2>
+        <div className="sessions-list">
+          {history.length > 0 ? (
+            history.map((session) => (
+              <div key={session.id} className="session-item">
+                <div className="session-challenge">
+                  <span className="challenge-prompt">
+                    {session.challenge?.prompt || `Game #${session.id}`}
+                  </span>
+                  <span className="challenge-type">
+                    {session.challenge?.type
+                      ? `(${session.challenge.type})`
+                      : ""}
+                  </span>
+                </div>
+                <div className="session-result">
+                  <span
+                    className={`result-badge ${
+                      session.correct ? "correct" : "incorrect"
+                    }`}
+                  >
+                    {session.correct ? "✅" : "❌"}
+                  </span>
+                  <span className="reaction-time">
+                    {Number(session.reaction_time).toFixed(2)}s
+                  </span>
+                  <span className="points">
+                    +{session.points_earned}pts
+                  </span>
+                  <span className="round-date">
+                    {new Date(session.timestamp).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="no-data">
+              No game history yet. Start playing to build your history!
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
