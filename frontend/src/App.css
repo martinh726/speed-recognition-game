@@ -1343,3 +1343,20 @@ body {
     justify-content: center;
   }
 }
+
+/* Missing keyframes used above */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Achievement requirement label */
+.achievement-req {
+  font-size: 0.75rem;
+  color: #718096;
+  margin-top: 0.25rem;
+}
+
+.achievement.earned .achievement-req {
+  color: #b7791f;
+}
